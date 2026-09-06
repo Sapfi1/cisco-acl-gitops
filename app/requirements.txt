@@ -1,0 +1,4 @@
+Flask==3.0.3
+ansible==9.5.1
+ansible-pylibssh==1.1.0
+requests==2.31.0

@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Flask Web UI + Git Client
+  web:
+    build: ./app
+    container_name: cisco-acl-web
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./configs:/app/configs
+      - ./data:/app/data
+      - ./ansible:/app/ansible
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DB_PATH=/app/data/cisco_acl.db
+    networks:
+      - netdevops-net
+
+  # Локальный GitLab для GitOps контура
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab-server
+    restart: unless-stopped
+    hostname: 'gitlab.local'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://192.168.101.11:8080'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - "8080:8080"
+      - "2222:22"
+    volumes:
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+    networks:
+      - netdevops-net
+
+networks:
+  netdevops-net:
+    driver: bridge
+
+volumes:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
