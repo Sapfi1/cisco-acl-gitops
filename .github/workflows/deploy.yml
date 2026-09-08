@@ -7,17 +7,27 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Stack & Validate
+    name: Setup Environment & Deploy Stack
     runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install System Dependencies & Docker Compose
+        run: |
+          echo "Обновление репозиториев и установка Compose..."
+          sudo apt update -y
+          sudo apt install -y docker-compose-plugin git curl
+
+      - name: Ensure User Permissions for Docker
+        run: |
+          sudo usermod -aG docker $USER || true
+
       - name: Deploy Containers via Docker Compose
         run: |
-          echo "Запуск контейнеров на хосте..."
+          echo "Запуск контейнеров проекта..."
           docker compose up -d --build
 
       - name: Check Running Containers
         run: |
-          docker ps | grep cisco-acl || true
+          docker ps
