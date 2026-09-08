@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cisco-acl-chart
+description: Helm chart for Cisco ACL GitOps Automation Web Application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

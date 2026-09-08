@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: cisco-acl-gitops-web
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 5000
+  nodePort: 30080
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+ciscoCredentials:
+  user: "admin"
+  password: "CiscoPassword123"
+  enableSecret: "CiscoEnable123"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
