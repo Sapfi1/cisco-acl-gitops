@@ -13,11 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+
       - name: Install System Dependencies & Docker Compose
         run: |
+          echo "Удаление битого репозитория HashiCorp..."
+          sudo rm -f /etc/apt/sources.list.d/*hashicorp* || true
+
           echo "Обновление репозиториев и установка Compose..."
-          sudo apt update -y
-          sudo apt install -y docker-compose-plugin git curl
+          sudo apt update -y || true
+          sudo apt install -y --no-install-recommends docker-compose-plugin git curl 
+
 
       - name: Ensure User Permissions for Docker
         run: |
