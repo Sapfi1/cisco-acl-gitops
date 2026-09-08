@@ -1,0 +1,23 @@
+name: NetDevOps Cisco ACL GitOps Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Stack & Validate
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Containers via Docker Compose
+        run: |
+          echo "Запуск контейнеров на хосте..."
+          docker compose up -d --build
+
+      - name: Check Running Containers
+        run: |
+          docker ps | grep cisco-acl || true
