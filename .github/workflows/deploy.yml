@@ -22,7 +22,8 @@ jobs:
         run: |
           eval $(minikube docker-env)
           docker build -t cisco-acl-gitops-web:v1 -f app/Dockerfile app/
-          helm upgrade --install cisco-acl ./helm/cisco-acl-chart
+          helm upgrade --install cisco-acl ./helm/cisco-acl-chart \
+		  	--set service.type=NodePort
 
       - name: Deploy Monitoring (Prometheus & Grafana)
         run: |
@@ -33,6 +34,8 @@ jobs:
             --create-namespace \
             --set alertmanager.enabled=false \
             --set prometheus.prometheusSpec.resources.requests.memory=256Mi \
+			--set grafana.service.type=NodePort \
+            --set grafana.service.nodePort=30300 \
             --set grafana.adminPassword=admin
 
       - name: Configure Ingress Routes
@@ -67,3 +70,5 @@ jobs:
           kubectl get pods -n monitoring
           echo "=== Ingress routes ==="
           kubectl get ingress -A
+		  echo "=== NodePort Services ==="
+		  kubectl get svc -A | grep NodePort
