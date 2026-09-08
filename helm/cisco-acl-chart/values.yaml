@@ -2,13 +2,14 @@ replicaCount: 1
 
 image:
   repository: cisco-acl-gitops-web
-  tag: latest
-  pullPolicy: IfNotPresent
+  tag: v1
+  pullPolicy: Never
 
 service:
   type: NodePort
   port: 5000
-  nodePort: 30080
+  targetPort: 5000
+  nodePort: 30500
 
 persistence:
   enabled: true
