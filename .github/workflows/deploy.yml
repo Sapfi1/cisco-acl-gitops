@@ -19,9 +19,24 @@ jobs:
           echo "Удаление битого репозитория HashiCorp..."
           sudo rm -f /etc/apt/sources.list.d/*hashicorp* || true
 
-          echo "Обновление репозиториев и установка Compose..."
+          echo "Обновление репозиториев и установка базовых утилит..."
           sudo apt update -y || true
-          sudo apt install -y --no-install-recommends docker-compose-plugin git curl 
+          sudo apt install -y curl git ca-certificates
+
+          echo "Проверка и установка плагина Docker Compose..."
+          if ! docker compose version >/dev/null 2>&1; then
+          echo "Compose не найден, устанавливаем CLI плагин..."
+          DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+          mkdir -p $DOCKER_CONFIG/cli-plugins
+          curl -SL https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+          chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+        
+          # Также копируем в системную директорию Docker CLI
+          sudo mkdir -p /usr/local/lib/docker/cli-plugins
+          sudo cp $DOCKER_CONFIG/cli-plugins/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+          fi
+
+          docker compose version
 
 
       - name: Ensure User Permissions for Docker
