@@ -64,6 +64,77 @@ jobs:
                             number: 80
           EOF
 
+      - name: Configure Ingress Routes
+        run: |
+          # 1. Ingress для Grafana
+          kubectl apply -f - << 'EOF'
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: grafana-ingress
+            namespace: monitoring
+            annotations:
+              ingress.class: nginx
+          spec:
+            rules:
+              - host: grafana.local
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: k8s-monitoring-grafana
+                          port:
+                            number: 80
+          EOF
+
+          # 2. Ingress для Cisco ACL приложения
+          kubectl apply -f - << 'EOF'
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: cisco-acl-ingress
+            namespace: default
+            annotations:
+              ingress.class: nginx
+          spec:
+            rules:
+              - host: cisco.local
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: cisco-acl-service
+                          port:
+                            number: 5000
+          EOF
+
+          # 3. Ingress для Prometheus (в пространстве monitoring)
+          kubectl apply -f - << 'EOF'
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: prometheus-ingress
+            namespace: monitoring
+            annotations:
+              ingress.class: nginx
+          spec:
+            rules:
+              - host: prometheus.local
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: k8s-monitoring-kube-promet-prometheus
+                          port:
+                            number: 9090
+          EOF
+      
       - name: Verify Deployment Status
         run: |
           echo "=== Pods in default namespace ==="
