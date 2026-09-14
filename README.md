@@ -17,7 +17,6 @@
 
 ## 📁 Структура репозитория
 
-```text
 cisco-acl-gitops/
 ├── .github/workflows/   # CI/CD пайплайны GitHub Actions (deploy.yml)
 ├── ansible/             # Playbooks и роли для настройки сетевых устройств
@@ -26,14 +25,14 @@ cisco-acl-gitops/
 ├── helm/                # Helm-чарт для развертывания приложения (cisco-acl-chart)
 ├── docker-compose.yml   # Дополнительная конфигурация для локального запуска
 └── setup_helper.sh      # Вспомогательные скрипты развертывания
-
-⚙️ Основной функционал
+---
+## ⚙️ Основной функционал
 Веб-интерфейс для управления ACL: Приложение на базе Python/Flask обрабатывает запросы, формирует правила доступа для оборудования Cisco и автоматизирует их версионирование.
 GitOps Деплой через GitHub Actions: Любое изменение в ветке main автоматически триггерит пайплайн, который линтит Helm-чарты, собирает Docker-образ локально и обновляет релиз в кластере Minikube.
 Интегрированный мониторинг: Развертывание стека kube-prometheus-stack (Prometheus + Grafana) для отслеживания состояния подов, потребления ресурсов и метрик приложения.
 Маршрутизация (Ingress): Доступ к веб-интерфейсу, Grafana и Prometheus через настроенные Ingress-маршруты и NodePort сервисы.
-
-🛠️ Инструкция по развертыванию (Quick Start)
+---
+## 🛠️ Инструкция по развертыванию (Quick Start)
 1. Клонирование репозитория
 Bash
 git clone [https://github.com/Sapfi1/cisco-acl-gitops.git](https://github.com/Sapfi1/cisco-acl-gitops.git)
@@ -50,7 +49,9 @@ kubectl get pods -A
 
 # Проверка сервисов и NodePort
 kubectl get svc -A
-📊 Доступ к сервисам
+
+---
+## 📊 Доступ к сервисам
 Веб-приложение Cisco ACL: Доступно через NodePort 30500 или настроенный Ingress (cisco.local).
 Grafana (Дашборды): Доступна на порту 30300 (файл values.yaml). Логин/Пароль по умолчанию: admin / admin.
 Prometheus: Сбор метрик и мониторинг состояния кластера (NodePort 30900).
