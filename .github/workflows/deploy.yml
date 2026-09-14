@@ -34,6 +34,8 @@ jobs:
             --create-namespace \
             --set alertmanager.enabled=false \
             --set prometheus.prometheusSpec.resources.requests.memory=256Mi \
+            --set prometheus.service.type=NodePort \
+            --set prometheus.service.nodePort=30900 \
             --set grafana.service.type=NodePort \
             --set grafana.service.nodePort=30300 \
             --set grafana.adminPassword=admin
