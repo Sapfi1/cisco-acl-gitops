@@ -134,7 +134,25 @@ jobs:
                           port:
                             number: 9090
           EOF
+
+      - name: Deploy GitLab Omnibus Container
+        run: |
+          # Останавливаем старый контейнер, если он был
+          docker stop gitlab || true
+          docker rm gitlab || true
       
+          # Запускаем официальный контейнер GitLab Omnibus
+          docker run -d \
+            --hostname gitlab.local \
+            --name gitlab \
+            --restart always \
+            -p 8929:8929 \
+            -p 2224:22 \
+            -v /srv/gitlab/config:/etc/gitlab \
+            -v /srv/gitlab/logs:/var/log/gitlab \
+            -v /srv/gitlab/data:/var/opt/gitlab \
+            gitlab/gitlab-ce:latest
+              
       - name: Verify Deployment Status
         run: |
           echo "=== Pods in default namespace ==="
