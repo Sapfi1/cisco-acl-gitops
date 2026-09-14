@@ -14,7 +14,7 @@ DB_PATH = os.path.join(REPO_DIR, "cisco_acl.db")
 os.makedirs(CONFIGS_DIR, exist_ok=True)
 if not os.path.exists(os.path.join(REPO_DIR, ".git")):
     subprocess.run(["git", "config", "--global", "--add", "safe.directory", "*"], check=False)
-    subprocess.run(["git", "init", REPO_DIR], check=True
+    subprocess.run(["git", "init", REPO_DIR], check=True)
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
